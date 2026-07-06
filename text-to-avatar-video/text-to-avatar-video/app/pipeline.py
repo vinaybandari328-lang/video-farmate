@@ -1,8 +1,8 @@
 import os
 from app.config import settings
-from app.models import VideoRequest, JobStatus
+from app.models import VideoRequest, JobStatus, ServiceType
 from app.jobs import update_job
-from app.services import script_gen, heygen, video_export, captions
+from app.services import script_gen, heygen, video_export, captions, free_video
 
 
 async def run_pipeline(job_id: str, req: VideoRequest) -> None:
@@ -21,16 +21,20 @@ async def run_pipeline(job_id: str, req: VideoRequest) -> None:
         script = await script_gen.generate_script(req.topic, req.target_seconds)
         update_job(job_id, script=script)
 
-        # 2. Avatar + voice video generation via HeyGen
+        # 2. Avatar + voice video generation
         update_job(job_id, status=JobStatus.rendering_avatar)
-        avatar_id = req.avatar_id or settings.heygen_default_avatar_id
-        voice_id = req.voice_id or settings.heygen_default_voice_id
-
-        video_id = await heygen.create_avatar_video(script, avatar_id, voice_id)
-        video_url = await heygen.wait_for_video(video_id)
-
         raw_path = os.path.join(job_dir, "raw_master.mp4")
-        await heygen.download_video(video_url, raw_path)
+
+        if req.service == ServiceType.heygen:
+            avatar_id = req.avatar_id or settings.heygen_default_avatar_id
+            voice_id = req.voice_id or settings.heygen_default_voice_id
+
+            video_id = await heygen.create_avatar_video(script, avatar_id, voice_id)
+            video_url = await heygen.wait_for_video(video_id)
+            await heygen.download_video(video_url, raw_path)
+        else:
+            await free_video.generate_free_video(script, raw_path)
+
         update_job(job_id, raw_video_path=raw_path)
 
         # 3. Optional captions, burned into the master before per-format export

@@ -10,6 +10,8 @@ class Settings(BaseSettings):
     heygen_default_voice_id: str = ""
     openai_api_key: str = ""
 
+    free_service_voice: str = "en-US-AndrewNeural"
+
     output_dir: str = "./output"
     poll_interval_seconds: int = 5
     poll_timeout_seconds: int = 600

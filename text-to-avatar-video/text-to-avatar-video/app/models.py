@@ -9,10 +9,15 @@ class ExportFormat(str, Enum):
     square = "square"                         # 1080x1080, 1:1
 
 
+class ServiceType(str, Enum):
+    heygen = "heygen"
+    free = "free"
+
+
 class JobStatus(str, Enum):
     queued = "queued"
     generating_script = "generating_script"
-    rendering_avatar = "rendering_avatar"
+    rendering_avatar = "rendering_avatar"  # used for both heygen and free generation
     post_processing = "post_processing"
     done = "done"
     failed = "failed"
@@ -21,6 +26,7 @@ class JobStatus(str, Enum):
 class VideoRequest(BaseModel):
     topic: str = Field(..., description="What the video should be about")
     target_seconds: int = Field(45, ge=10, le=300, description="Target spoken length")
+    service: ServiceType = Field(ServiceType.free, description="Which service to use for video generation")
     avatar_id: Optional[str] = Field(None, description="HeyGen avatar_id, falls back to default")
     voice_id: Optional[str] = Field(None, description="HeyGen voice_id, falls back to default")
     formats: list[ExportFormat] = Field(

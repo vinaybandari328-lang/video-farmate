@@ -1,4 +1,6 @@
+import os
 import subprocess
+import imageio_ffmpeg
 from app.models import ExportFormat
 
 # width, height for each target platform
@@ -22,8 +24,9 @@ def export_format(source_path: str, dest_path: str, fmt: ExportFormat) -> str:
         f"crop={width}:{height}"
     )
 
+    ffmpeg_exe = imageio_ffmpeg.get_ffmpeg_exe()
     cmd = [
-        "ffmpeg", "-y",
+        ffmpeg_exe, "-y",
         "-i", source_path,
         "-vf", vf,
         "-c:v", "libx264",
@@ -45,8 +48,9 @@ def burn_captions(source_path: str, srt_path: str, dest_path: str) -> str:
     """
     Burns an .srt subtitle file into the video as hardcoded captions.
     """
+    ffmpeg_exe = imageio_ffmpeg.get_ffmpeg_exe()
     cmd = [
-        "ffmpeg", "-y",
+        ffmpeg_exe, "-y",
         "-i", source_path,
         "-vf", f"subtitles={srt_path}:force_style='FontSize=16,Outline=2'",
         "-c:v", "libx264",
