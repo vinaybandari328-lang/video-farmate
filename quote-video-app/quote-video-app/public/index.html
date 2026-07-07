@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quote Reel — Caption Video Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <div class="sprocket-row" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand-mark" width="30" height="30" viewBox="0 0 30 30" fill="none">
+        <circle cx="15" cy="15" r="13" stroke="var(--amber)" stroke-width="2"/>
+        <path d="M15 2 L15 8 M15 22 L15 28 M2 15 L8 15 M22 15 L28 15" stroke="var(--amber)" stroke-width="2"/>
+        <circle cx="15" cy="15" r="3.5" fill="var(--amber)"/>
+      </svg>
+      <div class="brand-text">
+        <span class="brand-title">QUOTE REEL</span>
+        <span class="brand-sub">caption video studio</span>
+      </div>
+    </div>
+    <div class="topbar-note">text → vertical &amp; square video, ready for Reels / Shorts / YouTube</div>
+  </header>
+
+  <main class="layout">
+
+    <section class="panels">
+
+      <div class="panel">
+        <div class="panel-label"><span class="num">01</span> TEXT</div>
+        <textarea id="quoteText" maxlength="900" rows="6"
+          placeholder="Type or paste the quote, caption, or line you want animated on screen…">Success is not final, failure is not fatal: it is the courage to continue that counts.</textarea>
+        <div class="hint"><span id="wordCount">0</span> words · captions are split and timed automatically</div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-label"><span class="num">02</span> BACKGROUND</div>
+        <div class="seg" id="bgTypeSeg">
+          <button type="button" class="seg-btn active" data-val="gradient">Gradient</button>
+          <button type="button" class="seg-btn" data-val="solid">Solid</button>
+        </div>
+        <div class="color-row">
+          <label class="color-field">
+            <span>Color 1</span>
+            <input type="color" id="color1" value="#6C5CE7">
+          </label>
+          <label class="color-field" id="color2Field">
+            <span>Color 2</span>
+            <input type="color" id="color2" value="#FD79A8">
+          </label>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-label"><span class="num">03</span> CAPTION STYLE</div>
+        <div class="row-split">
+          <div class="sub">
+            <span class="sub-label">Text color</span>
+            <div class="swatches" id="fontColorSwatches">
+              <button type="button" class="swatch active" data-val="white" style="--sw:#ffffff"></button>
+              <button type="button" class="swatch" data-val="0xF6C453" style="--sw:#F6C453"></button>
+              <button type="button" class="swatch" data-val="0x3FA796" style="--sw:#3FA796"></button>
+              <button type="button" class="swatch" data-val="black" style="--sw:#000000"></button>
+            </div>
+          </div>
+          <div class="sub">
+            <span class="sub-label">Size</span>
+            <div class="seg" id="fontSizeSeg">
+              <button type="button" class="seg-btn" data-val="small">S</button>
+              <button type="button" class="seg-btn active" data-val="medium">M</button>
+              <button type="button" class="seg-btn" data-val="large">L</button>
+            </div>
+          </div>
+        </div>
+        <label class="switch-row">
+          <span>Caption backing panel</span>
+          <input type="checkbox" id="textBackground" checked>
+          <span class="switch"></span>
+        </label>
+      </div>
+
+      <div class="panel">
+        <div class="panel-label"><span class="num">04</span> FORMAT</div>
+        <div class="format-grid" id="aspectGrid">
+          <button type="button" class="format-btn active" data-val="9:16">
+            <span class="frame frame-916"></span>
+            Reels / Shorts
+          </button>
+          <button type="button" class="format-btn" data-val="1:1">
+            <span class="frame frame-11"></span>
+            Feed post
+          </button>
+          <button type="button" class="format-btn" data-val="16:9">
+            <span class="frame frame-169"></span>
+            YouTube
+          </button>
+        </div>
+      </div>
+
+      <button id="generateBtn" class="generate-btn">Generate video</button>
+      <div id="errorBox" class="error-box" hidden></div>
+
+    </section>
+
+    <section class="stage-wrap">
+      <div class="stage" id="stage">
+        <div class="viewfinder tl"></div>
+        <div class="viewfinder tr"></div>
+        <div class="viewfinder bl"></div>
+        <div class="viewfinder br"></div>
+
+        <div class="stage-inner" id="stageInner">
+          <div class="placeholder" id="placeholder">
+            <div class="rec-dot idle"></div>
+            <div class="placeholder-text">Preview will render here</div>
+          </div>
+          <video id="previewVideo" controls playsinline hidden></video>
+        </div>
+
+        <div class="timecode-bar">
+          <span class="rec-dot" id="recDot"></span>
+          <span id="timecode" class="mono">00:00:00:00</span>
+          <span id="stageStatus" class="mono status">STANDBY</span>
+        </div>
+      </div>
+
+      <a id="downloadLink" class="download-btn" hidden download>Download MP4</a>
+    </section>
+
+  </main>
+
+  <footer class="foot">Rendered on the server with ffmpeg · no watermark · files clear after an hour</footer>
+
+<script src="/app.js"></script>
+</body>
+</html>
